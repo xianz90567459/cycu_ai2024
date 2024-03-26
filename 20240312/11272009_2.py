@@ -4,7 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # 讀取 csv 文件
-df = pd.read_csv('112年1-10月交通事故簡訊通報資料.csv')
+df = pd.read_csv('/workspaces/cycu_ai2024/20240312/112年1-10月交通事故簡訊通報資料.csv')
 
 # 顯示所有標題
 print(df.columns.tolist())
@@ -46,7 +46,7 @@ import matplotlib.pyplot as plt
 from matplotlib.font_manager import FontProperties
 
 # 使用支援中文的字體
-font = FontProperties(fname=r"c:\windows\fonts\simsun.ttc", size=14)
+font = FontProperties(fname=r"/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", size=14)
 
 # 假設 df 是您的 DataFrame
 for index, row in df.iterrows():

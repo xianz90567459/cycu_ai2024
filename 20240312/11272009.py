@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from matplotlib.font_manager import FontProperties
 
 # 讀取 Excel 文件
-df = pd.read_csv('112年1-10月交通事故簡訊通報資料.csv', dtype={30: str, 47: str, 48: str})
+df = pd.read_csv('/workspaces/cycu_ai2024/20240312/112年1-10月交通事故簡訊通報資料.csv', dtype={30: str, 47: str, 48: str})
 
 # 過濾資料
 filtered_df = df[(df['國道名稱'] == '國道1號') & (df['方向'].str.contains('南'))]
@@ -20,7 +20,7 @@ mileage_counts_df = mileage_counts.reset_index(name='發生次數')
 mileage_counts_df.to_excel('國道1號南下里程事件.xlsx', index=False)
 
 # 設定字體
-font = FontProperties(fname=r"c:\windows\fonts\simsun.ttc", size=14) 
+font = FontProperties(fname=r"/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", size=14)
 
 # 繪製所有里程數的長條圖
 plt.figure(figsize=(20,10)) # 設定圖表大小
