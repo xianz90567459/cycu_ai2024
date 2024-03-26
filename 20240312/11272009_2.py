@@ -1,5 +1,6 @@
 #112年1-10月交通事故簡訊通報資料.csv
 
+import os
 import pandas as pd
 import matplotlib.pyplot as plt
 
