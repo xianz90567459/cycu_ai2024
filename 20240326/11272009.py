@@ -5,10 +5,10 @@ import pandas as pd
 from io import StringIO
 
 base_url = "https://tisvcloud.freeway.gov.tw/history/TDCS/M04A/20240325/"
-output_file = "combined.csv"
+new_folder = "20240326/ETC"
 
-# 創建一個空的 DataFrame 來儲存所有的資料
-combined_df = pd.DataFrame()
+# 創建新的資料夾
+os.makedirs(new_folder, exist_ok=True)
 
 # 迴圈讀取每個小時的資料夾
 for hour in range(24):
@@ -23,8 +23,5 @@ for hour in range(24):
         # 如果讀取成功，則將 csv 文件的內容轉換為 pandas DataFrame
         if response.status_code == 200:
             df = pd.read_csv(StringIO(response.text))
-            # 將新讀取的資料添加到已存在的 DataFrame 中
-            combined_df = pd.concat([combined_df, df])
-
-# 將合併後的 DataFrame 儲存到一個 csv 文件
-combined_df.to_csv(output_file, index=False)
+            # 將 DataFrame 儲存到新的資料夾
+            df.to_csv(os.path.join(new_folder, csv_file), index=False)
