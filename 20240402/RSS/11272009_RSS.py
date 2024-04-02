@@ -5,7 +5,7 @@ import os
 import requests
 
 # 設定目標資料夾
-folder = '20240402/RSS'
+folder = '20240402/RSS/RSS_dowmload'
 if not os.path.exists(folder):
     os.makedirs(folder)
 
