@@ -21,10 +21,13 @@ m = folium.Map(location=[selected_earthquakes.iloc[0]['緯度'], selected_earthq
 import matplotlib.pyplot as plt
 import matplotlib.colors
 
+# 創建一個從黃色到紅色的顏色映射
+cmap = plt.cm.get_cmap('YlOrRd')
+
 # 將每個地震添加到地圖上
 for index, row in selected_earthquakes.iterrows():
     # 根據地震規模計算顏色，規模越大顏色越紅
-    color = plt.cm.Reds(row['規模'] / selected_earthquakes['規模'].max())
+    color = cmap(row['規模'] / selected_earthquakes['規模'].max())
 
     folium.CircleMarker(
         location=[row['緯度'], row['經度']],
