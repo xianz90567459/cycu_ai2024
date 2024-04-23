@@ -24,30 +24,47 @@ import matplotlib.colors
 # 創建一個從黃色到紅色的顏色映射
 cmap = plt.cm.get_cmap('YlOrRd')
 
-# 將每個地震添加到地圖上
-for index, row in selected_earthquakes.iterrows():
-    # 根據地震規模計算顏色，規模越大顏色越紅
-    color = cmap(row['規模'] / selected_earthquakes['規模'].max())
+import folium.plugins
 
-    folium.CircleMarker(
-        location=[row['緯度'], row['經度']],
-        radius=5,
-        popup=f"時間: {row['地震時間']}, 規模: {row['規模']}, 緯度: {row['緯度']}, 經度: {row['經度']}",
-        color=matplotlib.colors.rgb2hex(color),
-        fill=True,
-        fill_color=matplotlib.colors.rgb2hex(color),
-    ).add_to(m)
+# 創建一個 GeoJSON 物件，包含所有地震的資訊
+features = [
+    {
+        'type': 'Feature',
+        'geometry': {
+            'type': 'Point',
+            'coordinates': [row['經度'], row['緯度']],
+        },
+        'properties': {
+            'time': row['地震時間'].isoformat(),
+            'style': {'color': matplotlib.colors.rgb2hex(cmap(row['規模'] / selected_earthquakes['規模'].max()))},
+            'icon': 'circle',
+            'iconstyle': {
+                'fillColor': matplotlib.colors.rgb2hex(cmap(row['規模'] / selected_earthquakes['規模'].max())),
+                'fillOpacity': 0.8,
+                'stroke': 'true',
+                'radius': 5
+            },
+            'popup': f"時間: {row['地震時間']}, 規模: {row['規模']}, 緯度: {row['緯度']}, 經度: {row['經度']}",
+        }
+    }
+    for index, row in selected_earthquakes.iterrows()
+]
 
-# 顯示地圖
-display(m)
+# 將 GeoJSON 物件添加到地圖上，並添加時間軸
+folium.plugins.TimestampedGeoJson(
+    {'type': 'FeatureCollection', 'features': features},
+    period='PT1H',
+    add_last_point=False,
+    auto_play=True,
+    loop=False,
+    max_speed=1,
+    loop_button=True,
+    date_options='YYYY/MM/DD HH:mm:ss',
+    time_slider_drag_update=True
+).add_to(m)
 
-import os
-
-# 獲取當前腳本的目錄
-script_dir = os.path.dirname(os.path.abspath(__file__))
-
-# 創建地圖的完整路徑
-map_path = os.path.join(script_dir, 'map.html')
+# 定義地圖儲存的路徑
+map_path = 'earthquake_map.html'
 
 # 儲存地圖為 HTML 文件
 m.save(map_path)
