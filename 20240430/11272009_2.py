@@ -57,5 +57,50 @@ print(df.head(5))
 # 顯示有多少行
 print(len(df))
 
+from datetime import datetime
+
+def feature_time(time):
+    # 將時間字符串轉換為 datetime 對象
+    dt = datetime.strptime(time, '%Y/%m/%d %H:%M')
+    
+    # 從 datetime 對象中提取出小時和分鐘
+    hour = dt.hour
+    minute = dt.minute
+    
+    # 將時間特徵化為 1-288 的範圍
+    return (hour * 12 + minute // 5) + 1
+
+def feature_location(location):
+    # 將地點特徵化為只有 '01' 的數字，並將第四個到第七個字符轉換為整數
+    if str(location)[:2] == '01':
+        location_feature = str(location)[3:7]  # 注意 Python 的索引是從 0 開始的，所以第四個字符的索引是 3
+        if location_feature.isdigit():
+            return int(location_feature)
+    return None
+
+
+# 讀取並特徵化 'SpaceMeanSpeed' 資料夾中的所有 CSV 檔案
+for filename in os.listdir('/workspaces/cycu_ai2024/20240430/SpaceMeanSpeed'):
+    if filename.endswith('.csv'):
+        df_speed = pd.read_csv(os.path.join('/workspaces/cycu_ai2024/20240430/SpaceMeanSpeed', filename), header=None)
+        for index, row in df_speed.iterrows():
+            # 檢查 '地點' 列的前兩個字符，並將 '0005' 轉換為整數
+            location_feature = feature_location(row[1])
+            if location_feature is None:
+                continue  # 如果前兩個字符不是 '01'，則跳過該行
+            # 檢查 '車種' 列的值
+            if row[3] != 31:
+                continue  # 如果 '車種' 不是 31，則跳過該行
+            # 找到時間和地點匹配的行
+            match_row = df[(df['時間'] == feature_time(row[0])) & (df['地點'] == location_feature)]
+            if not match_row.empty:
+                # 將 '小客車旅行速度' 的值添加到對應的行中
+                df.loc[match_row.index, '小客車旅行速度'] = row[4]
+            
+if not match_row.empty:
+    # 將 '小客車旅行速度' 的值添加到對應的行中
+    df.loc[match_row.index, '小客車旅行速度'] = row[4]
+    print(df)
+
 # 將特徵保存到 CSV 檔案
 df.to_csv('/workspaces/cycu_ai2024/20240430/11272009_2.csv', index=False)
