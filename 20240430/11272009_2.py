@@ -39,18 +39,23 @@ features = []
 for filename in os.listdir('/workspaces/cycu_ai2024/20240430/VehicleType'):
     if filename.endswith('.csv'):
         df = pd.read_csv(os.path.join('/workspaces/cycu_ai2024/20240430/VehicleType', filename), header=None)
-        features.extend(df.apply(feature, axis=1).tolist())
+        for index, row in df.iterrows():
+            # 檢查 '地點' 列的前兩個字符
+            if str(row[1])[:2] != '01':
+                continue  # 如果前兩個字符不是 '01'，則跳過該行
+            features.append(feature(row))
 
-# 將特徵轉換為 DataFrame
-df_features = pd.DataFrame(features, columns=['時間', '地點', '方向', '小客車', '小貨車', '大客車', '大貨車', '聯結車'])
+# 假設 features 是一個包含所有特徵向量的列表
+df = pd.DataFrame(features, columns=['時間', '地點', '方向', '小客車', '小貨車', '大客車', '大貨車', '聯結車'])
 
-# 對地點特徵進行 one-hot encoding
-df_features = pd.get_dummies(df_features, columns=['地點'])
+# 將相同時間、相同地點、相同方向的行合併在一起，並對 '小客車', '小貨車', '大客車', '大貨車', '聯結車' 的列求和
+df = df.groupby(['時間', '地點', '方向']).sum().reset_index()
 
 # 顯示前 5 行
+print(df.head(5))
 
-print(df_features.head())
+# 顯示有多少行
+print(len(df))
 
 # 將特徵保存到 CSV 檔案
-
-df_features.to_csv('/workspaces/cycu_ai2024/20240430/11272009_2.csv', index=False)
+df.to_csv('/workspaces/cycu_ai2024/20240430/11272009_2.csv', index=False)
