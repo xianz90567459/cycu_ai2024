@@ -33,7 +33,7 @@ fig2 = plt.figure()
 ax2 = fig2.add_subplot(111, projection='3d')
 
 # 繪製北向的 3D 散點圖
-ax1.scatter(df_north['時間'], df_north['地點'], df_north['小客車'], c=df_north['顏色碼'])
+ax1.scatter(df_north['時間'], df_north['地點'], df_north['小客車'], c=df_north['顏色碼'], s=5)
 
 # 設定軸標籤
 ax1.set_xlabel('Time')
@@ -47,7 +47,7 @@ plt.show()
 fig1.savefig('/workspaces/cycu_ai2024/20240507/11272009_2_north.png')
 
 # 繪製南向的 3D 散點圖
-ax2.scatter(df_south['時間'], df_south['地點'], df_south['小客車'], c=df_south['顏色碼'])
+ax2.scatter(df_south['時間'], df_south['地點'], df_south['小客車'], c=df_south['顏色碼'], s=5)
 
 # 設定軸標籤
 ax2.set_xlabel('Time')
