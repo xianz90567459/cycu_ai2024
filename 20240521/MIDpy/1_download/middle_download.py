@@ -36,8 +36,13 @@ for single_date in daterange(start_date, end_date):
     date_str = single_date.strftime("%Y%m%d")
     url = f"https://tisvcloud.freeway.gov.tw/history/TDCS/M05A/M05A_{date_str}.tar.gz"
     local_filename = f"M05A_{date_str}.tar.gz"
-    download_file(url, local_filename, date_str)
-
+    print("Before calling download_file")
+    try:
+        download_file(url, local_filename, date_str)
+    except Exception as e:
+        print(f"Error occurred: {e}")
+    finally:
+        print("After calling download_file")
 
 
 def download_hourly_files(date_str):
